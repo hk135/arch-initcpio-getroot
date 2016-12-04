@@ -7,6 +7,12 @@ down into memory at each boot seemed like the simplest way of achiving this.
 The get_rootfs hooks should be BEFORE create_rootfs in the pipeline. This is because the rootfs has to be copied before
 the create_rootfs hook finishes but after the rootfs has been created.
 
+Depends on the core/mkinitcpio-nfs-utils package to provide the net hook
+
+Example HOOKS line from mkinicpio.conf: HOOKS="base udev net get_rootfs_curltarball create_rootfs keyboard" 
+
+Example pxelinux config:  append break initrd=initramfs.img ip=:::::eth0:dhcp create_rootfs_size=2200M curl_source=http://192.168.0.1/os/rootfs.tar.gz
+
 Hooks:
 ### create_rootfs
 This hook creates a tmpfs in the new root folder and then calls the value of get_root_handler (in a similar vein to 
