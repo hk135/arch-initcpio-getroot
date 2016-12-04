@@ -1,0 +1,19 @@
+#!/bin/bash
+
+build() {
+        add_runscript
+}
+
+
+help() {
+  cat <<HELPEOF
+### create_rootfs
+This hook creates a tmpfs in the new root folder and then calls the value of get_root_handler (in a similar vein to
+mount_handler function already in initcpio)
+
+CMDLINE options:
+create_rootfs_type: tmpfs(default) or ramfs
+create_rootfs_size: defaults to 1G, this is passed as -osize= when mounting the new rootfs
+HELPEOF
+}
+

@@ -1,0 +1,25 @@
+#!/bin/bash
+
+build() {
+        add_binary "/usr/bin/rsync"
+
+        add_runscript
+}
+
+
+help() {
+  cat <<HELPEOF
+### get_rootfs_rsync
+This hook will download using rsync and untar into the new root folder
+
+CMDLINE options:
+
+rsync_source: REQUIRED source for rsync
+rsync_opts: options to pass to rsync, by default "-a --numeric-ids --progress" 
+
+Issues:
+Couldn't get Symlinks to download as Symlinks increasing the memory footprint
+
+HELPEOF
+}
+

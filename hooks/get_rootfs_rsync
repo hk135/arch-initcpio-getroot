@@ -1,0 +1,44 @@
+run_hook() {
+        msg "get_rootfs_rsync Runtime Hook"
+
+        get_root_handler="get_root_rsync"
+}
+
+get_root_rsync() {
+	### Check Required Values
+	if [ -z "${rsync_source}" ]; then
+		err "No Rsync Source... REQUIRED"
+		echo "You are being dropped to a recovery shell"
+		echo "    Type 'exit' to try and continue booting"
+		launch_interactive_shell
+		msg "Trying to continue (this will most likely fail) ..."
+        fi
+
+	### Set Default Values
+	if [ -z "${rsync_opts}" ]; then
+		rsync_opts="-a --numeric-ids --progress"
+	fi
+
+	### Rsync into new root
+        rsync "${rsync_opts} \
+               --exclude=proc/* \
+               --exclude=sys/* \
+               --exclude=dev/* \
+               --exclude=tmp/* \
+               --exclude=var/cache/pacman/* \
+               --exclude=boot/* \
+               --exclude=run/* \
+               --exclude=mnt/* \
+               --exclude=media/* \
+               "${rsync_source} $1
+
+	rc = $?
+	if [ "$rc" -ne 0 ]; then
+		err "Download Failed with Return code $rc"
+                echo "You are being dropped to a recovery shell"
+                echo "    Type 'exit' to try and continue booting"
+                launch_interactive_shell
+                msg "Trying to continue (this will most likely fail) ... "
+	fi
+	
+}

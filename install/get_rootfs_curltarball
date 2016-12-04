@@ -1,0 +1,27 @@
+#!/bin/bash
+
+build() {
+        add_binary "/usr/bin/curl"
+        add_binary "/usr/bin/tar"
+        add_binary "/usr/bin/gzip"
+        add_binary "/usr/bin/gunzip"
+
+        add_runscript
+}
+
+
+help() {
+  cat <<HELPEOF
+### get_rootfs_curltarball
+This hook will download using curl and untar into the new root folder
+
+CMDLINE options:
+
+curl_source: REQUIRED source for curl
+curl_opts: options to pass to curl, by default blank which produces a nice progress meter
+tar_opts: options to pass to tar, by default -zxf which will untar without output (allowing for the curl progress meter)
+         when I added v to the opts I found I was waiting for the output to finish much longer than I would have otherwise
+
+HELPEOF
+}
+

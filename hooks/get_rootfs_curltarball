@@ -1,0 +1,34 @@
+run_hook() {
+        msg "get_rootfs_curltarball Runtime Hook"
+
+        get_root_handler="get_root_curltarball"
+}
+
+get_root_curltarball() {
+	### Check Required Values
+	if [ -z "${curl_source}" ]; then
+		err "No Curl Source... REQUIRED"
+		echo "You are being dropped to a recovery shell"
+		echo "    Type 'exit' to try and continue booting"
+		launch_interactive_shell
+		msg "Trying to continue (this will most likely fail) ..."
+        fi
+
+	### Set Default Values
+	if [ -z "${tar_opts}" ]; then
+		tar_opts="-zxf"
+	fi
+
+	### Download and Untar into new root
+	cd $1
+        curl "${curl_opts}" "${curl_source}" | tar "${tar_opts}" -
+	rc = $?
+	if [ "$rc" -ne 0 ]; then
+		err "Download Failed with Return code $rc"
+                echo "You are being dropped to a recovery shell"
+                echo "    Type 'exit' to try and continue booting"
+                launch_interactive_shell
+                msg "Trying to continue (this will most likely fail) ... "
+	fi
+	
+}

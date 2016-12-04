@@ -1,0 +1,51 @@
+run_hook() {
+        msg "create_rootfs Runtime Hook"
+
+        mount_handler="create_root_mount_handler"
+}
+
+create_root_mount_handler() {
+	### Set Defaul Values
+	if [ -z "${create_rootfs_type}" ]; then
+		create_rootfs_type="tmpfs"
+	fi
+
+	if [ -z "${create_rootfs_size}" ]; then
+		create_rootfs_size="1G"
+	fi
+
+	if [ -z "${create_rootfs_source}" ]; then
+		create_rootfs_source="${create_rootfs_type}"
+	fi
+	
+	### Validate FS type
+	if [ "${create_rootfs_type}" != "tmpfs" ] && [ "${create_rootfs_type}" != "ramfs" ]; then
+		err "Unsupported rootfs type ${create_rootfs_type}, supported values are tmpfs and ramfs"
+        	echo "You are being dropped to a recovery shell"
+		echo "    Type 'exit' to try and continue booting"
+		launch_interactive_shell
+		msg "Trying to continue (this will most likely fail) ..."
+	fi
+	
+        ## Mount tmpfs
+        mount -t "${create_rootfs_type}" -osize="${create_rootfs_size}" "${create_rootfs_source}" $1
+	mount_rc="$?"
+	if [ "$mount_rc" -ne 0 ]; then
+		err "Mount failed with Return Code $mount_rc, as there are only 2 options to set create_rootfs_size=${create_rootfs_size} is probably at fault"
+                echo "You are being dropped to a recovery shell"
+                echo "    Type 'exit' to try and continue booting"
+                launch_interactive_shell
+                msg "Trying to continue (this will most likely fail) ..."
+	fi
+
+	## Get Root Handler
+	if [ -n "$get_root_handler" ]; then
+		"$get_root_handler" $1
+	else
+		err "No get_root_handler set, might work but probably not"
+                echo "You are being dropped to a recovery shell"
+                echo "    Type 'exit' to try and continue booting"
+                launch_interactive_shell
+                msg "Trying to continue (this will most likely fail)"
+	fi
+}

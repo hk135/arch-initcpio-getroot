@@ -1,0 +1,24 @@
+#!/bin/bash
+
+build() {
+	add_binary "/usr/bin/rsync"
+	add_binary "/usr/bin/curl"
+	add_binary "/usr/bin/tar"
+	add_binary "/usr/bin/gzip"
+	add_binary "/usr/bin/gunzip"
+
+	add_module "virtio"
+	add_module "virtio-net"
+
+
+	add_runscript
+}
+
+
+help() {
+  cat <<HELPEOF
+Rsync 2 Tmpfs:
+Copy rootfs from Rsync Daemon to tmpfs
+HELPEOF
+}
+
