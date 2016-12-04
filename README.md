@@ -26,3 +26,15 @@ curl_opts: options to pass to curl, by default blank which produces a nice progr
 tar_opts: options to pass to tar, by default -zxf which will untar without output (allowing for the curl progress meter)
 	 when I added v to the opts I found I was waiting for the output to finish much longer than I would have otherwise
 
+### get_rootfs_rsync
+This hook will download using rsync and untar into the new root folder
+
+CMDLINE options:
+
+rsync_source: REQUIRED source for rsync
+rsync_opts: options to pass to rsync, by default "-a --numeric-ids --progress"
+
+Issues:
+Couldn't get Symlinks to download as Symlinks increasing the memory footprint
+
+
